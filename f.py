@@ -11,7 +11,7 @@ bot = Bot(token=TOKEN)
 files_to_upload = sys.argv[1:]
 
 # معرف المجموعة
-chat_id = '-1002364051928'
+chat_id = '-4772916658'
 
 # دالة غير متزامنة لإرسال الصورة إلى تليجرام
 async def send_photo_to_telegram(file_path):
