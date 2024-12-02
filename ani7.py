@@ -4,7 +4,7 @@ import os
 import asyncio
 
 # التوكين الخاص بالبوت
-TOKEN = '7785587255:AAF3bopGHQMPaeuwyi6go0rM8klpqARd7hc'
+TOKEN = '7685669499:AAF2buhSCDWiqvsoNc9CXUl3OHYggLDKIBs'
 bot = Bot(token=TOKEN)
 
 # قراءة مسارات الملفات من سطر الأوامر
