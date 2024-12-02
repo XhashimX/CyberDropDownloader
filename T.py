@@ -9,9 +9,11 @@ TOKEN = '7216683481:AAFg4XeoLGVzSwe604GARV3RtRZL0N1PnSA'
 GROUP_CHAT_ID = -1002364051928
 USER_CHAT_ID = 421777948
 SENT_PHOTOS_FILE = 'sent_photos.txt'
+# ملفات التخزين
+SENT_PHOTOS_FILE = 'sent_photos.txt'
+
 STARRED_PHOTOS_FILE = 'starred_photos.txt'
 REJECTED_PHOTOS_FILE = 'rejected_photos.txt'
-
 STARRED2_PHOTOS_FILE = 'starred2_photos.txt'
 REJECTED2_PHOTOS_FILE = 'rejected2_photos.txt'
 
@@ -20,9 +22,9 @@ REJECTED3_PHOTOS_FILE = 'rejected3_photos.txt'
 
 STARRED4_PHOTOS_FILE = 'starred4_photos.txt'
 REJECTED4_PHOTOS_FILE = 'rejected4_photos.txt'
-
 STARRED5_PHOTOS_FILE = 'starred5_photos.txt'
 REJECTED5_PHOTOS_FILE = 'rejected5_photos.txt'
+
 # إعداد المهلة الزمنية
 REQUEST_TIMEOUT = 60  # مهلة زمنية أطول (بالثواني)
 
@@ -434,44 +436,34 @@ async def send_unrated_photos(update: Update, context: CallbackContext, source_f
         await context.bot.forward_message(chat_id=USER_CHAT_ID, from_chat_id=GROUP_CHAT_ID, message_id=photo_id)
     await update.message.reply_text(f"تم إرسال {num_photos} صورة غير تقييمها.")
 
+async def send_remaining_count(update: Update, context: CallbackContext, sent_file, starred_file, rejected_file):
+    sent_photos = set(load_message_ids(sent_file))
+    starred_photos = set(load_message_ids(starred_file))
+    rejected_photos = set(load_message_ids(rejected_file))
+    remaining_photos = sent_photos - starred_photos - rejected_photos
+    await update.message.reply_text(f"عدد الصور المتبقية للتقييم: {len(remaining_photos)}")
+    
 # معالجات الأوامر
 # معالجة الأمر /many لعدد من الصور غير المقيّمة بناءً على الفئة
 async def handle_many(update: Update, context: CallbackContext):
-    num_photos = int(context.args[0]) if context.args else 1  # إذا لم يتم تحديد عدد، افترض 1
-    # حساب عدد الصور غير المقيّمة في SENT_PHOTOS_FILE
-    total_unrated_photos = len(load_message_ids(SENT_PHOTOS_FILE))
-    await update.message.reply_text(f"عدد الصور غير المقيّمة المتاحة في SENT_PHOTOS_FILE هو: {total_unrated_photos}")
+    await send_remaining_count(update, context, SENT_PHOTOS_FILE, STARRED_PHOTOS_FILE, REJECTED_PHOTOS_FILE)
 
 async def handle_many1(update: Update, context: CallbackContext):
-    num_photos = int(context.args[0]) if context.args else 1
-    # حساب عدد الصور غير المقيّمة في STARRED_PHOTOS_FILE
-    total_unrated_photos = len(load_message_ids(STARRED_PHOTOS_FILE))
-    await update.message.reply_text(f"عدد الصور غير المقيّمة المتاحة في STARRED_PHOTOS_FILE هو: {total_unrated_photos}")
+    await send_remaining_count(update, context, STARRED_PHOTOS_FILE, STARRED2_PHOTOS_FILE, REJECTED2_PHOTOS_FILE)
 
 async def handle_many2(update: Update, context: CallbackContext):
-    num_photos = int(context.args[0]) if context.args else 1
-    # حساب عدد الصور غير المقيّمة في STARRED2_PHOTOS_FILE
-    total_unrated_photos = len(load_message_ids(STARRED2_PHOTOS_FILE))
-    await update.message.reply_text(f"عدد الصور غير المقيّمة المتاحة في STARRED2_PHOTOS_FILE هو: {total_unrated_photos}")
+    await send_remaining_count(update, context, STARRED2_PHOTOS_FILE, STARRED3_PHOTOS_FILE, REJECTED3_PHOTOS_FILE)
 
 async def handle_many3(update: Update, context: CallbackContext):
-    num_photos = int(context.args[0]) if context.args else 1
-    # حساب عدد الصور غير المقيّمة في STARRED3_PHOTOS_FILE
-    total_unrated_photos = len(load_message_ids(STARRED3_PHOTOS_FILE))
-    await update.message.reply_text(f"عدد الصور غير المقيّمة المتاحة في STARRED3_PHOTOS_FILE هو: {total_unrated_photos}")
+    await send_remaining_count(update, context, STARRED3_PHOTOS_FILE, STARRED4_PHOTOS_FILE, REJECTED4_PHOTOS_FILE)
 
 async def handle_many4(update: Update, context: CallbackContext):
-    num_photos = int(context.args[0]) if context.args else 1
-    # حساب عدد الصور غير المقيّمة في STARRED4_PHOTOS_FILE
-    total_unrated_photos = len(load_message_ids(STARRED4_PHOTOS_FILE))
-    await update.message.reply_text(f"عدد الصور غير المقيّمة المتاحة في STARRED4_PHOTOS_FILE هو: {total_unrated_photos}")
+    await send_remaining_count(update, context, STARRED4_PHOTOS_FILE, STARRED5_PHOTOS_FILE, REJECTED5_PHOTOS_FILE)
 
 async def handle_many5(update: Update, context: CallbackContext):
-    num_photos = int(context.args[0]) if context.args else 1
-    # حساب عدد الصور غير المقيّمة في STARRED5_PHOTOS_FILE
-    total_unrated_photos = len(load_message_ids(STARRED5_PHOTOS_FILE))
-    await update.message.reply_text(f"عدد الصور غير المقيّمة المتاحة في STARRED5_PHOTOS_FILE هو: {total_unrated_photos}")
-
+    await send_remaining_count(update, context, STARRED_PHOTOS_FILE[4], STARRED_PHOTOS_FILE[4], REJECTED_PHOTOS_FILE[4])
+    
+    
 # بدء تشغيل البوت
 def main():
     logger.info("Setting up the application...")
