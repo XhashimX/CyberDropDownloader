@@ -12,7 +12,7 @@ bot = Bot(token=TOKEN)
 files_to_upload = sys.argv[1:]
 
 # معرف الدردشة
-chat_id = '421777948'
+chat_id = '-4614656936'
 
 # دالة لتقسيم الفيديو
 def split_video(video_path):
